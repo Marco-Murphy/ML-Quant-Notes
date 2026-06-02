@@ -62,7 +62,7 @@
   
   通过这个指标，我们可以建立结果与标准的关系，进行迭代
  
-  所以，感知机的损失函数是：L(w, b) = -\sum_{x_i \in M} y_i (w \cdot x_i + b)
+  所以，感知机的损失函数是：$L(w, b) = -\sum_{x_i \in M} y_i (w \cdot x_i + b)$ 
 
   我们的目标是使损失函数为0。
 
@@ -72,21 +72,21 @@
   梯度的数学含义是什么呢？其实是损失函数对w和b求偏导的向量形式。首先解释下偏导，偏导的意思是，在一个具有很多变量的式子里，将剩下的变量当作常量，只对一个变量求导。偏导的目的是判断每个变量的重要程度，最重要的部分相当于“最陡”的方向
    w和b的梯度公式：
 $$
-\frac{\partial L}{\partial w} = -\sum_{x_i \in M} y_i
-$$
+\frac{\partial L}{\partial w} = -\sum_{x_i \in M} y_i 
+$$ 
 
 $$
-\frac{\partial L}{\partial b} = -\sum_{x_i \in M} y_i
-$$
+\frac{\partial L}{\partial b} = -\sum_{x_i \in M} y_i 
+$$ 
 
   接着，朝着最陡的方向移动，在数学上也就是对w和b进行更新。
 $$
-w \leftarrow w + \eta \sum_{x_i \in M} y_i x_i
-$$
+w \leftarrow w + \eta \sum_{x_i \in M} y_i x_i 
+$$ 
 
 $$
-b \leftarrow b + \eta \sum_{x_i \in M} y_i
-$$
+b \leftarrow b + \eta \sum_{x_i \in M} y_i 
+$$  
    其中，eta是学习率，也就是步长。即每次往最陡的方向移动多少。学习率越低，训练的结果越准确。
 
       
