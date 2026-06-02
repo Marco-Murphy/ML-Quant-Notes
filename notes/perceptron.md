@@ -65,9 +65,7 @@ $$
 $$
 
   接着，朝着最陡的方向移动，在数学上也就是对w和b进行更新。
-$$
-w \leftarrow w - \eta \frac{\partial L}{\partial w} = w + \eta \, y_i x_i
-$$
+$$ w \leftarrow w - \eta \frac{\partial L}{\partial w} = w + \eta \, y_i x_i $$
 
 $$
 b \leftarrow b - \eta \frac{\partial L}{\partial b} = b + \eta \, y_i
