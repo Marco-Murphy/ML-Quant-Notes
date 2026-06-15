@@ -102,13 +102,89 @@ $$
 
 意为找到相应的参数，使得符合历史数据的情况最有可能发生。
    
+大致步骤为：写出似然函数表达式→取该表达式的对数→求该式子的最大值→求出参数w和b
 
+具体过程如下
 
-## 3. 模型
+### 1. 设未知数
 
-刚刚我们已经知道了，感知机输出的结果，也就是模型，是一个超平面。其函数为f(x)=sign(wx+b)。
-   
-我们的目的就是训练模型，使其返回给我们一个w和b的值，实现我们“分水果”的目的.
+对于二分类问题，设数据集为 $\{(\mathbf{x}^{(i)}, y^{(i)})\}_{i=1}^{m}$，其中 $\mathbf{x}^{(i)} \in \mathbb{R}^n$，$y^{(i)} \in \{0,1\}$。
+
+模型参数：权重向量 $\mathbf{w} = (w_1, w_2, \dots, w_n)^\top$，偏置 $b$。
+
+模型假设（条件概率）：
+$$
+\begin{aligned}
+P(y=1 \mid \mathbf{x}; \mathbf{w}, b) &= \frac{1}{1 + e^{-(\mathbf{w}^\top \mathbf{x} + b)}} \triangleq h(\mathbf{x}) \\
+P(y=0 \mid \mathbf{x}; \mathbf{w}, b) &= 1 - h(\mathbf{x})
+\end{aligned}
+$$
+
+### 2. 写出似然函数
+
+由于样本独立同分布，似然函数为所有样本联合概率：
+
+$$
+L(\mathbf{w}, b) = \prod_{i=1}^{m} \left[ h(\mathbf{x}^{(i)})^{y^{(i)}} \cdot (1 - h(\mathbf{x}^{(i)}))^{1 - y^{(i)}} \right]
+$$
+
+### 3. 取对数（对数似然）
+
+取自然对数将乘积转化为求和：
+
+$$
+\ell(\mathbf{w}, b) = \ln L(\mathbf{w}, b) = \sum_{i=1}^{m} \left[ y^{(i)} \ln h(\mathbf{x}^{(i)}) + (1 - y^{(i)}) \ln (1 - h(\mathbf{x}^{(i)})) \right]
+$$
+
+将 $h(\mathbf{x}) = \frac{1}{1+e^{-z}}$，其中 $z = \mathbf{w}^\top \mathbf{x} + b$，代入并化简得：
+
+$$
+\ell(\mathbf{w}, b) = \sum_{i=1}^{m} \left[ y^{(i)} (\mathbf{w}^\top \mathbf{x}^{(i)} + b) - \ln(1 + e^{\mathbf{w}^\top \mathbf{x}^{(i)} + b}) \right]
+$$
+
+### 4. 求解最大值（求导并令梯度为零）
+
+最大化 $\ell(\mathbf{w}, b)$ 等价于最小化负对数似然。对参数求偏导：
+
+- 对 $w_j$ 求导：
+  $$
+  \frac{\partial \ell}{\partial w_j} = \sum_{i=1}^{m} \left( y^{(i)} - h(\mathbf{x}^{(i)}) \right) x_j^{(i)}
+  $$
+
+- 对 $b$ 求导：
+  $$
+  \frac{\partial \ell}{\partial b} = \sum_{i=1}^{m} \left( y^{(i)} - h(\mathbf{x}^{(i)}) \right)
+  $$
+
+令梯度为零，得到似然方程组：
+
+$$
+\begin{cases}
+\displaystyle \sum_{i=1}^{m} \left( y^{(i)} - h(\mathbf{x}^{(i)}) \right) x_j^{(i)} = 0, & j=1,\dots,n \\[1.5em]
+\displaystyle \sum_{i=1}^{m} \left( y^{(i)} - h(\mathbf{x}^{(i)}) \right) = 0
+\end{cases}
+$$
+
+### 5. 反推 $\mathbf{w}$ 和 $b$
+
+上述方程组没有闭式解析解（因为 $h(\mathbf{x}^{(i)})$ 是 $\mathbf{w}, b$ 的非线性 Sigmoid 函数），需使用数值优化算法（如梯度上升法）迭代求解。
+
+梯度上升更新公式（学习率 $\alpha$）：
+
+$$
+\begin{aligned}
+w_j &\leftarrow w_j + \alpha \frac{\partial \ell}{\partial w_j} = w_j + \alpha \sum_{i=1}^{m} \left( y^{(i)} - h(\mathbf{x}^{(i)}) \right) x_j^{(i)} \\
+b &\leftarrow b + \alpha \frac{\partial \ell}{\partial b} = b + \alpha \sum_{i=1}^{m} \left( y^{(i)} - h(\mathbf{x}^{(i)}) \right)
+\end{aligned}
+$$
+
+重复迭代直至收敛，得到最终参数 $\mathbf{w}^*$ 和 $b^*$。
+
+> 注：实际应用中常采用批量梯度下降（负梯度方向）、随机梯度下降或拟牛顿法等优化策略。
+
+## 3. 关于概率的小补充————其它量化概率的思路
+
+基于树，基于神经网络，基于核
 
 ## 4. 策略
   
